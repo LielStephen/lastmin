@@ -14,12 +14,12 @@ export default function CustomerDashboard() {
   const [rescheduleTargetOrder, setRescheduleTargetOrder] = useState(null)
 
   const [newOrder, setNewOrder] = useState({
-    pickupAddress: '123 Wall St, New York, NY',
-    pickupLat: 40.7074,
-    pickupLng: -74.0113,
-    dropAddress: '456 Broadway, New York, NY',
-    dropLat: 40.7191,
-    dropLng: -74.0002,
+    pickupAddress: '100 MG Road, Bengaluru, KA',
+    pickupLat: 12.9716,
+    pickupLng: 77.5946,
+    dropAddress: '45 Indiranagar, Bengaluru, KA',
+    dropLat: 12.9784,
+    dropLng: 77.6408,
     pickupZoneId: 1,
     dropZoneId: 1,
     length: 30,
@@ -190,7 +190,7 @@ export default function CustomerDashboard() {
                       <span className="truncate">{order.drop_address}</span>
                     </div>
                     <div className="flex justify-between pt-2 border-t border-slate-800/80 text-[11px]">
-                      <span className="text-slate-500">Price: <strong className="text-emerald-400 font-mono">${order.final_price}</strong></span>
+                      <span className="text-slate-500">Price: <strong className="text-emerald-400 font-mono">₹{order.final_price}</strong></span>
                       <span className="text-slate-500">{new Date(order.created_at).toLocaleDateString()}</span>
                     </div>
                   </div>
@@ -232,7 +232,7 @@ export default function CustomerDashboard() {
 
                 <div className="text-right">
                   <div className="text-xs text-slate-400">Total Billed Charge</div>
-                  <div className="font-mono text-xl font-extrabold text-emerald-400">${selectedOrder.final_price}</div>
+                  <div className="font-mono text-xl font-extrabold text-emerald-400">₹{selectedOrder.final_price}</div>
                   <div className="text-[11px] text-slate-500 capitalize">{selectedOrder.payment_method} Payment</div>
                 </div>
               </div>
@@ -256,12 +256,12 @@ export default function CustomerDashboard() {
               )}
 
               <InteractiveMap
-                pickupLat={selectedOrder.pickup_lat || 40.7074}
-                pickupLng={selectedOrder.pickup_lng || -74.0113}
-                dropLat={selectedOrder.drop_lat || 40.7191}
-                dropLng={selectedOrder.drop_lng || -74.0002}
-                agentLat={selectedOrder.agent_lat || 40.7128}
-                agentLng={selectedOrder.agent_lng || -74.0060}
+                pickupLat={selectedOrder.pickup_lat || 12.9716}
+                pickupLng={selectedOrder.pickup_lng || 77.5946}
+                dropLat={selectedOrder.drop_lat || 12.9784}
+                dropLng={selectedOrder.drop_lng || 77.6408}
+                agentLat={selectedOrder.agent_lat || 12.9716}
+                agentLng={selectedOrder.agent_lng || 77.5946}
                 agentName={selectedOrder.agent_name || 'Courier Agent'}
                 status={selectedOrder.status}
               />
@@ -434,9 +434,9 @@ export default function CustomerDashboard() {
                     onChange={e => setNewOrder({ ...newOrder, pickupZoneId: e.target.value })}
                     className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-slate-200"
                   >
-                    <option value={1}>Downtown Central</option>
-                    <option value={2}>North Suburbs</option>
-                    <option value={3}>West Industrial</option>
+                    <option value={1}>Bengaluru Central</option>
+                    <option value={2}>Mumbai Suburbs</option>
+                    <option value={3}>Delhi NCR</option>
                   </select>
                 </div>
               </div>
@@ -450,7 +450,7 @@ export default function CustomerDashboard() {
                     </span>
                   </div>
                   <div className="font-mono text-xl font-extrabold text-emerald-400">
-                    ${ratePreview.finalPrice}
+                    ₹{ratePreview.finalPrice}
                   </div>
                 </div>
               )}

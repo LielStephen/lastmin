@@ -35,9 +35,7 @@ export default function AdminDashboard() {
       }
     } catch (err) {
       console.error(err)
-    } finally {
-      setLoading(false)
-    }
+    } font-sans
   }
 
   const fetchOrderDetail = async (orderId) => {
@@ -142,7 +140,7 @@ export default function AdminDashboard() {
             <span>Total Revenue</span>
             <Zap className="w-4 h-4 text-emerald-400" />
           </div>
-          <div className="font-mono font-extrabold text-2xl text-emerald-400">${totalRevenue.toFixed(2)}</div>
+          <div className="font-mono font-extrabold text-2xl text-emerald-400">₹{totalRevenue.toFixed(2)}</div>
         </div>
 
         <div className="p-5 rounded-2xl glass-panel border border-slate-800 space-y-1">
@@ -207,7 +205,7 @@ export default function AdminDashboard() {
                   <div className="text-xs text-slate-400 space-y-1">
                     <div className="flex justify-between text-[11px] text-slate-500">
                       <span>Customer: <strong className="text-slate-300">{order.customer_name}</strong></span>
-                      <span>Total: <strong className="text-emerald-400 font-mono">${order.final_price}</strong></span>
+                      <span>Total: <strong className="text-emerald-400 font-mono">₹{order.final_price}</strong></span>
                     </div>
 
                     {order.status === 'Created' && (
@@ -261,12 +259,12 @@ export default function AdminDashboard() {
               </div>
 
               <InteractiveMap
-                pickupLat={selectedOrder.pickup_lat || 40.7074}
-                pickupLng={selectedOrder.pickup_lng || -74.0113}
-                dropLat={selectedOrder.drop_lat || 40.7191}
-                dropLng={selectedOrder.drop_lng || -74.0002}
-                agentLat={selectedOrder.agent_lat || 40.7128}
-                agentLng={selectedOrder.agent_lng || -74.0060}
+                pickupLat={selectedOrder.pickup_lat || 12.9716}
+                pickupLng={selectedOrder.pickup_lng || 77.5946}
+                dropLat={selectedOrder.drop_lat || 12.9784}
+                dropLng={selectedOrder.drop_lng || 77.6408}
+                agentLat={selectedOrder.agent_lat || 12.9716}
+                agentLng={selectedOrder.agent_lng || 77.5946}
                 agentName={selectedOrder.agent_name || 'Courier Agent'}
                 status={selectedOrder.status}
               />
