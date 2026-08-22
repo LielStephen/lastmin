@@ -1,0 +1,43 @@
+{
+  "name": "lastmin-delivery-tracker",
+  "version": "1.0.0",
+  "description": "Last-Mile Logistics Delivery Tracker & Management Platform",
+  "main": "server/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "build": "vite build",
+    "preview": "vite preview",
+    "seed": "node server/db/seed.js",
+    "test": "node server/tests/test_suite.js",
+    "generate-history": "node scripts/generate_git_history.js"
+  },
+  "keywords": [
+    "logistics",
+    "delivery-tracker",
+    "last-mile",
+    "haversine",
+    "strategy-pattern",
+    "state-machine"
+  ],
+  "author": "Logistics Engineering Team",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "lucide-react": "^0.475.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vite": "^6.1.0"
+  }
+}
