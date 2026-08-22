@@ -1,84 +1,327 @@
-# LastMin Logistics Delivery Tracker
+# LastMin — Logistics Delivery Tracker
 
-A last-mile logistics delivery tracking and fleet management platform built with React, Express, SQLite, and PostgreSQL DDL.
+LastMin is a full-stack last-mile delivery management platform designed to handle order creation, delivery assignment, pricing, courier tracking, and delivery status management.
 
----
+The project uses **React** for the frontend and **Express.js** for the backend, with SQLite for local development and a PostgreSQL schema for production-oriented deployments.
 
-## Key Features
+## Features
 
-- **Dynamic Rate Engine (Strategy Pattern)**: Computes shipping charges using volumetric weight `(L x W x H / 5000)` and configurable rate cards for B2B and B2C clients.
-- **Geospatial Auto-Assignment (Haversine Formula)**: Calculates real-time distance between order pickup coordinates and active couriers to dispatch the nearest available agent.
-- **Strict State Machine Matrix**: Enforces sequential lifecycle transitions (`Created` -> `Assigned` -> `Picked Up` -> `In Transit` -> `Out for Delivery` -> `Delivered` / `Failed`).
-- **Immutable Tracking Ledger**: DB triggers log every status transition with actor IDs and ISO timestamps.
-- **Kibo UI Delivery Comparison**: Composable React component comparing service tiers and rate cards.
-- **Interactive Vector GIS Map**: Live SVG visualizer rendering pickup points, active agent positions, and destinations.
+### Dynamic Rate Engine
 
----
+Shipping costs are calculated using package dimensions and configurable rate cards.
 
-## Quick Start
+* Volumetric weight calculation:
+  `L × W × H / 5000`
+* Supports different pricing rules for B2B and B2C customers
+* Rate calculation is implemented using the Strategy Pattern
+* Rate cards can be configured by administrators
 
-### Installation
+### Automatic Courier Assignment
+
+LastMin uses the **Haversine formula** to calculate the distance between a pickup location and available delivery agents.
+
+The system can then assign an order to the nearest active courier.
+
+### Delivery State Machine
+
+Orders follow a controlled delivery lifecycle:
+
+```text
+Created
+   ↓
+Assigned
+   ↓
+Picked Up
+   ↓
+In Transit
+   ↓
+Out for Delivery
+   ↓
+Delivered / Failed
+```
+
+Invalid state transitions are rejected by the backend, preventing inconsistent order states.
+
+### Tracking Ledger
+
+Delivery status changes are recorded in an immutable tracking history.
+
+Each transition records information such as:
+
+* Previous status
+* New status
+* Actor/user responsible for the change
+* Timestamp
+
+Database triggers are used to maintain the tracking history.
+
+### Delivery Comparison UI
+
+The React frontend includes a service comparison interface that allows customers to compare available delivery tiers and their corresponding rates.
+
+### Interactive Delivery Map
+
+The application includes an SVG-based map interface for visualizing:
+
+* Pickup locations
+* Delivery destinations
+* Active courier positions
+* Delivery routes and assignments
+
+## Tech Stack
+
+| Layer             | Technology                    |
+| ----------------- | ----------------------------- |
+| Frontend          | React                         |
+| Backend           | Node.js, Express.js           |
+| Database          | SQLite                        |
+| Production Schema | PostgreSQL                    |
+| Authentication    | JWT                           |
+| Authorization     | Role-Based Access Control     |
+| Mapping           | SVG / Geospatial calculations |
+| Testing           | Automated Node.js test suite  |
+| Deployment        | Render / Vercel               |
+
+## Project Structure
+
+```text
+lastmin/
+├── server/
+│   ├── controllers/
+│   │   ├── orders/
+│   │   ├── auth/
+│   │   ├── agents/
+│   │   ├── rates/
+│   │   └── zones/
+│   │
+│   ├── db/
+│   │   ├── schema.sql
+│   │   └── SQLite initialization/seeding
+│   │
+│   ├── middleware/
+│   │   ├── authentication
+│   │   └── authorization
+│   │
+│   ├── routes/
+│   ├── services/
+│   │   ├── rate engine
+│   │   ├── geospatial assignment
+│   │   ├── state machine
+│   │   └── notifications
+│   │
+│   └── tests/
+│
+├── src/
+│   ├── components/
+│   ├── context/
+│   ├── pages/
+│   ├── App.jsx
+│   └── index.css
+│
+├── render.yaml
+├── vercel.json
+├── package.json
+└── README.md
+```
+
+## Getting Started
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+* Node.js
+* npm
+* Git
+
+### Clone the Repository
 
 ```bash
 git clone https://github.com/LielStephen/lastmin.git
 cd lastmin
+```
+
+### Install Dependencies
+
+```bash
 npm install
 ```
 
-### Local Development & Production Server
+### Run in Development
+
+Start the application using the project's development script:
 
 ```bash
-# Build React static assets and start Express server
+npm run dev
+```
+
+The exact local URL will be printed in your terminal when the development server starts.
+
+> `localhost` is only for local development. It is not the production URL.
+
+### Build and Run
+
+To create a production build and run the Express server:
+
+```bash
 npm run build
 npm start
 ```
 
-Access the portal live at `http://localhost:5000`.
+The application will normally be available at:
 
-### Run Automated System Tests
+```text
+http://localhost:5000
+```
+
+This address is local to your computer and is **not accessible to other users on the internet** unless you explicitly expose or deploy the application.
+
+## Testing
+
+Run the automated test suite with:
 
 ```bash
 npm test
 ```
 
-Verifies the Rate Engine, Haversine geospatial auto-assignment, and State Machine matrix rules.
+The tests cover the core business logic, including:
 
----
+* Rate calculation
+* Volumetric weight
+* Haversine distance calculation
+* Courier assignment
+* Delivery state transitions
 
-## Demo Evaluator Accounts
+## Demo Accounts
 
-| Role | Email | Password | Access Rights |
-| :--- | :--- | :--- | :--- |
-| **System Administrator** | `admin@lastmin.com` | `password123` | Global matrix control, Haversine auto-dispatch, rate card configuration |
-| **Customer (B2C)** | `customer@lastmin.com` | `password123` | Order creation, Kibo UI tier selector, live tracking timeline |
-| **Customer (B2B)** | `b2b@company.com` | `password123` | Corporate rate card order placement |
-| **Delivery Agent** | `agent1@lastmin.com` | `password123` | Courier task matrix, GPS position broadcaster, status updates |
+The repository includes demo accounts for testing the different roles in the application.
 
----
+| Role                 | Email                  | Password      |
+| -------------------- | ---------------------- | ------------- |
+| System Administrator | `admin@lastmin.com`    | `password123` |
+| B2C Customer         | `customer@lastmin.com` | `password123` |
+| B2B Customer         | `b2b@company.com`      | `password123` |
+| Delivery Agent       | `agent1@lastmin.com`   | `password123` |
 
-## Repository Structure
+**Note:** These credentials are intended only for local/demo environments. Do not use them in a production deployment.
 
+## User Roles
+
+### Administrator
+
+Administrators can:
+
+* Configure delivery rate cards
+* Manage delivery rules
+* Monitor orders
+* Manage courier assignment
+* Control the delivery state machine
+
+### Customer
+
+Customers can:
+
+* Create delivery orders
+* Select delivery services
+* View calculated shipping charges
+* Track their deliveries
+
+### B2B Customer
+
+B2B customers can place orders using the configured corporate rate cards.
+
+### Delivery Agent
+
+Delivery agents can:
+
+* View assigned deliveries
+* Update delivery status
+* Broadcast their current position
+* Manage their assigned delivery tasks
+
+## Architecture
+
+The application follows a layered full-stack architecture:
+
+```text
+React Frontend
+      │
+      ▼
+Express REST API
+      │
+      ├── Authentication / JWT
+      ├── RBAC Authorization
+      ├── Order Management
+      ├── Rate Engine
+      ├── Courier Assignment
+      └── Delivery State Machine
+      │
+      ▼
+Database
+(SQLite / PostgreSQL)
 ```
-├── server/
-│   ├── controllers/      # Express route controllers (orders, auth, agents, rates, zones)
-│   ├── db/               # PostgreSQL schema.sql and SQLite database initializer/seeder
-│   ├── middleware/       # JWT authentication and RBAC authorization
-│   ├── routes/           # API endpoint router definitions
-│   ├── services/         # Rate Engine, Geospatial Haversine, State Machine, Notifications
-│   └── tests/            # Automated test suite
-├── src/
-│   ├── components/       # Kibo UI comparison, Interactive Map, Timeline, Modals
-│   ├── context/          # Auth context state provider
-│   ├── pages/            # Customer, Agent, and Admin portal dashboards
-│   ├── App.jsx           # Main React layout container
-│   └── index.css         # Styling system and status badges
-├── render.yaml           # Render Blueprint deployment specification
-├── vercel.json           # Vercel deployment configuration
-└── package.json          # Package manifest and npm scripts
+
+Business logic is separated into backend services rather than being placed directly inside route handlers.
+
+## Geospatial Assignment
+
+Courier assignment uses the Haversine formula to estimate the great-circle distance between two geographic coordinates.
+
+For a pickup location `(lat₁, lon₁)` and courier location `(lat₂, lon₂)`, the system calculates the distance and uses it to determine the nearest available courier.
+
+This makes the assignment process independent of a specific map provider.
+
+## Delivery State Management
+
+The backend enforces valid delivery transitions rather than allowing clients to arbitrarily change an order's status.
+
+For example:
+
+```text
+Created → Assigned
+Assigned → Picked Up
+Picked Up → In Transit
+In Transit → Out for Delivery
+Out for Delivery → Delivered
+Out for Delivery → Failed
 ```
 
----
+An invalid transition is rejected by the state machine.
 
 ## Deployment
 
-Configured for one-click deployment on Render using [`render.yaml`](file:///e:/lastmin/lastmin/render.yaml) or Vercel using [`vercel.json`](file:///e:/lastmin/lastmin/vercel.json).
+The repository contains deployment configuration for cloud hosting.
+
+### Render
+
+The project includes:
+
+```text
+render.yaml
+```
+
+which can be used to configure a Render deployment.
+
+### Vercel
+
+The repository also contains:
+
+```text
+vercel.json
+```
+
+for Vercel deployment configuration.
+
+The production URL depends on the hosting provider and the deployment configuration. **Do not document `localhost` as the production/demo URL.**
+
+After deployment, replace the deployment URL in your project documentation with the actual URL generated by Render or Vercel.
+
+## Why I Built This
+
+Last-mile delivery involves several problems that are easy to oversimplify: pricing, courier assignment, delivery state management, and tracking history.
+
+LastMin was built as a practical implementation of these concepts in a single system, with particular attention to backend business logic and the consistency of delivery state transitions.
+
+## License
+
+This project is intended for educational and demonstration purposes.
