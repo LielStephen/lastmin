@@ -14,18 +14,18 @@ export default function CustomerDashboard() {
   const [rescheduleTargetOrder, setRescheduleTargetOrder] = useState(null)
 
   const [newOrder, setNewOrder] = useState({
-    pickupAddress: '100 MG Road, Bengaluru, KA',
+    pickupAddress: '',
     pickupLat: 12.9716,
     pickupLng: 77.5946,
-    dropAddress: '45 Indiranagar, Bengaluru, KA',
+    dropAddress: '',
     dropLat: 12.9784,
     dropLng: 77.6408,
     pickupZoneId: 1,
     dropZoneId: 1,
-    length: 30,
-    width: 20,
-    height: 15,
-    actualWeight: 3.5,
+    length: '',
+    width: '',
+    height: '',
+    actualWeight: '',
     clientType: 'B2C',
     paymentMethod: 'COD'
   })
@@ -70,7 +70,10 @@ export default function CustomerDashboard() {
   }, [])
 
   useEffect(() => {
-    if (!showCreateModal) return
+    if (!showCreateModal || !newOrder.length || !newOrder.width || !newOrder.height || !newOrder.actualWeight) {
+      setRatePreview(null)
+      return
+    }
     const timeout = setTimeout(() => {
       fetch('/api/orders/calculate-rate', {
         method: 'POST',
@@ -104,6 +107,22 @@ export default function CustomerDashboard() {
       if (!res.ok) throw new Error(data.error || 'Failed to place order')
 
       setShowCreateModal(false)
+      setNewOrder({
+        pickupAddress: '',
+        pickupLat: 12.9716,
+        pickupLng: 77.5946,
+        dropAddress: '',
+        dropLat: 12.9784,
+        dropLng: 77.6408,
+        pickupZoneId: 1,
+        dropZoneId: 1,
+        length: '',
+        width: '',
+        height: '',
+        actualWeight: '',
+        clientType: 'B2C',
+        paymentMethod: 'COD'
+      })
       fetchOrders()
       fetchOrderDetail(data.order.id)
     } catch (err) {
@@ -132,8 +151,8 @@ export default function CustomerDashboard() {
       
       <div className="flex items-center justify-between p-6 rounded-2xl glass-panel border border-slate-800 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900">
         <div>
-          <h1 className="font-heading font-extrabold text-2xl text-slate-100">Customer Logistics Portal</h1>
-          <p className="text-sm text-slate-400 mt-1">Track your deliveries, calculate rates, and reschedule package attempts.</p>
+          <h1 className="font-heading font-extrabold text-2xl text-slate-100">Customer Portal</h1>
+          <p className="text-sm text-slate-400 mt-1">Track packages and manage your delivery orders.</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -325,7 +344,7 @@ export default function CustomerDashboard() {
                 </div>
                 <div>
                   <h3 className="font-heading font-bold text-lg text-slate-100">Create New Shipping Order</h3>
-                  <p className="text-xs text-slate-400">Auto-calculated rate card based on volumetric weight</p>
+                  <p className="text-xs text-slate-400">Fill in details to calculate rate and place order</p>
                 </div>
               </div>
               <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-slate-200">
@@ -342,17 +361,19 @@ export default function CustomerDashboard() {
                     type="text"
                     value={newOrder.pickupAddress}
                     onChange={e => setNewOrder({ ...newOrder, pickupAddress: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"
+                    placeholder="Enter pickup address"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-1">Drop Address</label>
+                  <label className="block text-slate-400 mb-1 font-medium">Drop Address</label>
                   <input
                     type="text"
                     value={newOrder.dropAddress}
                     onChange={e => setNewOrder({ ...newOrder, dropAddress: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"
+                    placeholder="Enter dropoff address"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
                     required
                   />
                 </div>
@@ -360,43 +381,47 @@ export default function CustomerDashboard() {
 
               <div className="grid grid-cols-4 gap-3">
                 <div>
-                  <label className="block text-slate-400 mb-1">L (cm)</label>
+                  <label className="block text-slate-400 mb-1 font-medium">Length (cm)</label>
                   <input
                     type="number"
                     value={newOrder.length}
                     onChange={e => setNewOrder({ ...newOrder, length: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200"
+                    placeholder="e.g. 30"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-1">W (cm)</label>
+                  <label className="block text-slate-400 mb-1 font-medium">Width (cm)</label>
                   <input
                     type="number"
                     value={newOrder.width}
                     onChange={e => setNewOrder({ ...newOrder, width: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200"
+                    placeholder="e.g. 20"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-1">H (cm)</label>
+                  <label className="block text-slate-400 mb-1 font-medium">Height (cm)</label>
                   <input
                     type="number"
                     value={newOrder.height}
                     onChange={e => setNewOrder({ ...newOrder, height: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200"
+                    placeholder="e.g. 15"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-1">Weight (kg)</label>
+                  <label className="block text-slate-400 mb-1 font-medium">Weight (kg)</label>
                   <input
                     type="number"
                     step="0.1"
                     value={newOrder.actualWeight}
                     onChange={e => setNewOrder({ ...newOrder, actualWeight: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200"
+                    placeholder="e.g. 3.5"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
                     required
                   />
                 </div>
@@ -404,7 +429,7 @@ export default function CustomerDashboard() {
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-slate-400 mb-1">Client Type</label>
+                  <label className="block text-slate-400 mb-1 font-medium">Client Type</label>
                   <select
                     value={newOrder.clientType}
                     onChange={e => setNewOrder({ ...newOrder, clientType: e.target.value })}
@@ -416,7 +441,7 @@ export default function CustomerDashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1">Payment Method</label>
+                  <label className="block text-slate-400 mb-1 font-medium">Payment Method</label>
                   <select
                     value={newOrder.paymentMethod}
                     onChange={e => setNewOrder({ ...newOrder, paymentMethod: e.target.value })}
@@ -428,7 +453,7 @@ export default function CustomerDashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1">Pickup Zone</label>
+                  <label className="block text-slate-400 mb-1 font-medium">Pickup Zone</label>
                   <select
                     value={newOrder.pickupZoneId}
                     onChange={e => setNewOrder({ ...newOrder, pickupZoneId: e.target.value })}
@@ -444,9 +469,9 @@ export default function CustomerDashboard() {
               {ratePreview && (
                 <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
                   <div>
-                    <span className="text-slate-400 block">Auto-Calculated Shipping Fee:</span>
+                    <span className="text-slate-400 block">Calculated Shipping Fee:</span>
                     <span className="text-[11px] text-slate-500">
-                      Billable Wt: {ratePreview.billableWeight} kg (Volumetric: {ratePreview.volumetricWeight} kg)
+                      Billable Weight: {ratePreview.billableWeight} kg (Volumetric: {ratePreview.volumetricWeight} kg)
                     </span>
                   </div>
                   <div className="font-mono text-xl font-extrabold text-emerald-400">
@@ -470,7 +495,7 @@ export default function CustomerDashboard() {
                   disabled={createLoading}
                   className="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow"
                 >
-                  {createLoading ? 'Confirming...' : 'Confirm & Place Order'}
+                  {createLoading ? 'Confirming...' : 'Place Order'}
                 </button>
               </div>
 
