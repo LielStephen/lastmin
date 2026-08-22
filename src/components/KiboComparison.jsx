@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Check, Zap, Shield, Sparkles, Truck, Package } from 'lucide-react'
+import { Check, Zap, Package } from 'lucide-react'
 
 export default function KiboComparison({ onSelectOption }) {
   const [selectedPlan, setSelectedPlan] = useState('express')
@@ -8,7 +8,6 @@ export default function KiboComparison({ onSelectOption }) {
     {
       id: 'standard',
       name: 'Standard Ground',
-      badge: 'Economical',
       price: '$10.00',
       perKg: '$2.50 / kg',
       eta: '24-48 Hours',
@@ -25,13 +24,12 @@ export default function KiboComparison({ onSelectOption }) {
     {
       id: 'express',
       name: 'Express Priority',
-      badge: 'Most Popular',
       price: '$18.00',
       perKg: '$4.00 / kg',
       eta: '2-4 Hours Same Day',
       features: [
         'Dedicated Priority Agent Pairing',
-        'Real-Time Live Map Vector GIS',
+        'Real-Time OpenStreetMap Vector GIS',
         'Immutable Audit Log History',
         'Instant Failed Delivery Reschedule',
         'Zero COD Surcharge Slashed Rate'
@@ -43,21 +41,10 @@ export default function KiboComparison({ onSelectOption }) {
   ]
 
   return (
-    <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6">
-      
+    <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <div className="p-2 rounded-lg bg-indigo-500/20 text-indigo-400">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="font-heading font-bold text-lg text-slate-100">Kibo UI Delivery Comparison</h3>
-            <p className="text-xs text-slate-400">Composable, accessible rate comparison blocks</p>
-          </div>
-        </div>
-        <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
-          Registry Component
-        </span>
+        <h3 className="font-heading font-bold text-base text-slate-200">Select Shipping Service Tier</h3>
+        <span className="text-xs font-mono text-slate-400">Rate Calculator</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -72,18 +59,10 @@ export default function KiboComparison({ onSelectOption }) {
                 setSelectedPlan(opt.id)
                 if (onSelectOption) onSelectOption(opt)
               }}
-              className={`relative p-5 rounded-2xl bg-gradient-to-b ${opt.gradient} border ${
+              className={`p-5 rounded-2xl bg-gradient-to-b ${opt.gradient} border ${
                 isSelected ? 'border-indigo-500 ring-2 ring-indigo-500/30 shadow-xl' : opt.border
               } cursor-pointer transition-all duration-200 glass-card-hover flex flex-col justify-between space-y-4`}
             >
-              {opt.badge && (
-                <span className={`absolute -top-2.5 right-4 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
-                  opt.id === 'express' ? 'bg-indigo-600 text-white shadow' : 'bg-slate-800 text-slate-300 border border-slate-700'
-                }`}>
-                  {opt.badge}
-                </span>
-              )}
-
               <div className="space-y-2">
                 <div className="flex items-center space-x-3">
                   <div className={`p-2.5 rounded-xl ${isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-300'}`}>
