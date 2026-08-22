@@ -1,0 +1,23 @@
+# Node modules
+node_modules/
+
+# SQLite Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Environment variables
+.env
+.env.local
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
