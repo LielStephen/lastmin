@@ -1,8 +1,9 @@
-# Render Deployment Blueprint Configuration
+# Render Free Deployment Blueprint Configuration
 services:
   - type: web
     name: lastmin-delivery-tracker
     env: node
+    plan: free
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
