@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import { Check, Zap, Package } from 'lucide-react'
 
 export default function KiboComparison({ onSelectOption }) {
-  const [selectedPlan, setSelectedPlan] = useState('express')
+  const [selectedPlan, setSelectedPlan] = useState('standard')
 
   const options = [
     {
       id: 'standard',
       name: 'Standard Ground',
-      price: '₹50.00',
-      perKg: '₹15.00 / kg',
+      price: 'FREE',
+      perKg: '₹0.00 base',
       eta: '24-48 Hours',
       features: [
         'Nearest Courier Auto-Dispatch',
@@ -75,8 +75,8 @@ export default function KiboComparison({ onSelectOption }) {
                 </div>
 
                 <div className="pt-2 flex items-baseline space-x-2">
-                  <span className="font-mono font-extrabold text-2xl text-slate-100">{opt.price}</span>
-                  <span className="text-xs text-slate-400">base ({opt.perKg})</span>
+                  <span className="font-mono font-extrabold text-2xl text-emerald-400">{opt.price}</span>
+                  <span className="text-xs text-slate-400">({opt.perKg})</span>
                 </div>
               </div>
 
