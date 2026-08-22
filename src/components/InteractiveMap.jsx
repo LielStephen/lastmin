@@ -27,11 +27,11 @@ export default function InteractiveMap({
       
       <div className="flex items-center justify-between bg-slate-900/90 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-800 text-xs">
         <div className="flex items-center space-x-2">
-          <Compass className="w-4 h-4 text-indigo-400 animate-spin-slow" />
-          <span className="font-heading font-semibold text-slate-200">OpenStreetMap Live Geospatial Layer</span>
+          <Compass className="w-4 h-4 text-indigo-400" />
+          <span className="font-heading font-semibold text-slate-200">Delivery Route Map</span>
         </div>
         <div className="flex items-center space-x-3 text-[11px] font-mono text-slate-400">
-          <span>Route: <strong className="text-indigo-300">{distanceTotal} km</strong></span>
+          <span>Distance: <strong className="text-indigo-300">{distanceTotal} km</strong></span>
           <a
             href={osmDirectLink}
             target="_blank"
@@ -46,7 +46,7 @@ export default function InteractiveMap({
 
       <div className="relative w-full h-72 rounded-xl overflow-hidden border border-slate-800">
         <iframe
-          title="OpenStreetMap Live Tracking"
+          title="OpenStreetMap Tracking"
           width="100%"
           height="100%"
           frameBorder="0"
@@ -80,15 +80,15 @@ export default function InteractiveMap({
             <span>Pickup</span>
           </span>
           <span className="flex items-center space-x-1">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-            <span>Live Courier</span>
+            <span className="w-2 h-2 rounded-full bg-amber-400" />
+            <span>Courier</span>
           </span>
           <span className="flex items-center space-x-1">
             <span className="w-2 h-2 rounded-full bg-indigo-400" />
             <span>Destination</span>
           </span>
         </div>
-        <span className="font-mono text-slate-500">OpenStreetMap API v3</span>
+        <span className="font-mono text-slate-500">OpenStreetMap</span>
       </div>
 
     </div>

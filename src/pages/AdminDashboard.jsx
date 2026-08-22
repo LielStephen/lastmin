@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Shield, Users, Truck, Zap, Sliders, CheckCircle, AlertTriangle, Layers, Navigation } from 'lucide-react'
+import { Shield, Users, Truck, Zap, CheckCircle } from 'lucide-react'
 import OrderTimeline from '../components/OrderTimeline'
 import InteractiveMap from '../components/InteractiveMap'
 
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
 
-      setToastMsg(`Haversine Auto-Dispatch: ${data.message}`)
+      setToastMsg(`Auto-assigned: ${data.message}`)
       fetchData()
       if (selectedOrder?.id === orderId) fetchOrderDetail(orderId)
     } catch (err) {
@@ -117,8 +117,8 @@ export default function AdminDashboard() {
             <Shield className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="font-heading font-extrabold text-2xl text-slate-100">Logistics Command Center</h1>
-            <p className="text-sm text-slate-400">Global order matrix, rate card editor, and geospatial dispatch monitoring.</p>
+            <h1 className="font-heading font-bold text-2xl text-slate-100">Admin Dashboard</h1>
+            <p className="text-sm text-slate-400">Order tracking, courier assignment, and status management.</p>
           </div>
         </div>
 
@@ -130,8 +130,8 @@ export default function AdminDashboard() {
             onChange={e => setIsOverride(e.target.checked)}
             className="rounded border-slate-700 text-rose-500 focus:ring-0"
           />
-          <label htmlFor="override" className="text-slate-300 font-semibold cursor-pointer">
-            Admin Matrix Override
+          <label htmlFor="override" className="text-slate-300 font-medium cursor-pointer">
+            Force status update
           </label>
         </div>
       </div>
@@ -181,12 +181,12 @@ export default function AdminDashboard() {
         
         <div className="lg:col-span-1 space-y-4">
           <h2 className="font-heading font-bold text-slate-200 text-base flex items-center justify-between">
-            <span>Global Order Matrix</span>
+            <span>Orders</span>
             <span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">{orders.length}</span>
           </h2>
 
           {loading ? (
-            <div className="py-12 text-center text-slate-500 text-sm">Loading matrix...</div>
+            <div className="py-12 text-center text-slate-500 text-sm">Loading orders...</div>
           ) : (
             <div className="space-y-3">
               {orders.map(order => (
@@ -207,7 +207,7 @@ export default function AdminDashboard() {
                   <div className="text-xs text-slate-400 space-y-1">
                     <div className="flex justify-between text-[11px] text-slate-500">
                       <span>Customer: <strong className="text-slate-300">{order.customer_name}</strong></span>
-                      <span>Billed: <strong className="text-emerald-400 font-mono">${order.final_price}</strong></span>
+                      <span>Total: <strong className="text-emerald-400 font-mono">${order.final_price}</strong></span>
                     </div>
 
                     {order.status === 'Created' && (
@@ -219,7 +219,7 @@ export default function AdminDashboard() {
                         className="w-full mt-2 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 text-indigo-300 text-xs font-semibold flex items-center justify-center space-x-1 transition"
                       >
                         <Zap className="w-3.5 h-3.5 text-indigo-400" />
-                        <span>Trigger Haversine Auto-Dispatch</span>
+                        <span>Auto-assign agent</span>
                       </button>
                     )}
                   </div>
@@ -235,18 +235,18 @@ export default function AdminDashboard() {
               
               <div className="flex items-start justify-between border-b border-slate-800 pb-4">
                 <div>
-                  <h3 className="font-heading font-extrabold text-xl text-slate-100">
-                    Order Matrix Record #{selectedOrder.tracking_number}
+                  <h3 className="font-heading font-bold text-xl text-slate-100">
+                    Order #{selectedOrder.tracking_number}
                   </h3>
                   <p className="text-xs text-slate-400 mt-1">Status: <strong className="text-rose-400">{selectedOrder.status}</strong></p>
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs text-slate-400">Admin Action:</span>
+                  <span className="text-xs text-slate-400">Change status:</span>
                   <select
                     value={selectedOrder.status}
                     onChange={e => handleAdminStatusChange(e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 font-semibold"
+                    className="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 font-medium"
                   >
                     <option value="Created">Created</option>
                     <option value="Assigned">Assigned</option>
@@ -276,7 +276,7 @@ export default function AdminDashboard() {
             </div>
           ) : (
             <div className="glass-panel rounded-2xl border border-slate-800 p-12 text-center text-slate-500">
-              Select an order from the matrix to inspect logs and trigger overrides.
+              Select an order to view details.
             </div>
           )}
         </div>

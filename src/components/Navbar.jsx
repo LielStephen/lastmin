@@ -11,17 +11,12 @@ export default function Navbar({ onOpenCalculator, onOpenNotifications }) {
         <div className="flex items-center justify-between h-16">
           
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <Truck className="w-5 h-5 text-white animate-pulse" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg">
+              <Truck className="w-5 h-5 text-white" />
             </div>
-            <div>
-              <span className="font-heading font-extrabold text-xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400">
-                LastMin
-              </span>
-              <span className="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                Logistics v1.0
-              </span>
-            </div>
+            <span className="font-heading font-extrabold text-xl tracking-tight text-slate-100">
+              LastMin
+            </span>
           </div>
 
           {user && (
@@ -32,19 +27,18 @@ export default function Navbar({ onOpenCalculator, onOpenNotifications }) {
                 className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-sm font-medium transition"
               >
                 <Calculator className="w-4 h-4 text-indigo-400" />
-                <span>Rate Engine</span>
+                <span>Rates</span>
               </button>
 
               <button
                 onClick={onOpenNotifications}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-sm font-medium transition relative"
+                className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-sm font-medium transition"
               >
                 <Bell className="w-4 h-4 text-amber-400" />
-                <span>Notify Log</span>
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping absolute -top-0.5 -right-0.5" />
+                <span>Notifications</span>
               </button>
 
-              <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-xs font-semibold text-slate-300">
+              <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-xs font-medium text-slate-300">
                 {user.role === 'admin' && <Shield className="w-3.5 h-3.5 text-rose-400" />}
                 {user.role === 'agent' && <Truck className="w-3.5 h-3.5 text-amber-400" />}
                 {user.role === 'customer' && <User className="w-3.5 h-3.5 text-indigo-400" />}
