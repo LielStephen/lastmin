@@ -8,13 +8,13 @@ export default function KiboComparison({ onSelectOption }) {
     {
       id: 'standard',
       name: 'Standard Ground',
-      price: '$10.00',
-      perKg: '$2.50 / kg',
+      price: '₹50.00',
+      perKg: '₹15.00 / kg',
       eta: '24-48 Hours',
       features: [
-        'Haversine Nearest Courier Dispatch',
+        'Nearest Courier Auto-Dispatch',
         'SMS & Email Notifications',
-        'Standard Volumetric Billing',
+        'Volumetric Weight Billing',
         '2 Retry Delivery Attempts'
       ],
       icon: Package,
@@ -24,15 +24,15 @@ export default function KiboComparison({ onSelectOption }) {
     {
       id: 'express',
       name: 'Express Priority',
-      price: '$18.00',
-      perKg: '$4.00 / kg',
+      price: '₹90.00',
+      perKg: '₹25.00 / kg',
       eta: '2-4 Hours Same Day',
       features: [
-        'Dedicated Priority Agent Pairing',
-        'Real-Time OpenStreetMap Vector GIS',
-        'Immutable Audit Log History',
-        'Instant Failed Delivery Reschedule',
-        'Zero COD Surcharge Slashed Rate'
+        'Dedicated Priority Agent',
+        'Live OpenStreetMap Tracking',
+        'Immutable Audit Trail',
+        'Instant Delivery Reschedule',
+        'Discounted COD Surcharge'
       ],
       icon: Zap,
       gradient: 'from-indigo-950/60 via-purple-950/40 to-slate-900',
@@ -44,7 +44,7 @@ export default function KiboComparison({ onSelectOption }) {
     <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-heading font-bold text-base text-slate-200">Select Shipping Service Tier</h3>
-        <span className="text-xs font-mono text-slate-400">Rate Calculator</span>
+        <span className="text-xs font-mono text-slate-400">Rate Calculator (INR)</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

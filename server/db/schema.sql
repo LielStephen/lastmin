@@ -1,7 +1,6 @@
 -- LastMin Delivery Tracker Schema
 -- PostgreSQL DDL with Strict Audit Logging Triggers and Haversine Functions
 
--- Drop existing tables if they exist
 DROP TABLE IF EXISTS order_status_logs CASCADE;
 DROP TABLE IF EXISTS orders CASCADE;
 DROP TABLE IF EXISTS agents CASCADE;
@@ -10,7 +9,6 @@ DROP TABLE IF EXISTS zone_areas CASCADE;
 DROP TABLE IF EXISTS zones CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
--- 1. User Registry (Admin, Customer, Agent)
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -21,7 +19,6 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Zone Registry & Coverage Mapping
 CREATE TABLE zones (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE,
@@ -39,11 +36,10 @@ CREATE TABLE zone_areas (
     state VARCHAR(100) NOT NULL
 );
 
--- 3. Configurable Dynamic Rate Cards (Zero Hardcoding)
 CREATE TABLE rate_cards (
     id SERIAL PRIMARY KEY,
     client_type VARCHAR(10) CHECK (client_type IN ('B2B', 'B2C')) NOT NULL,
-    is_intra_zone BOOLEAN NOT NULL, -- True if pickup & drop are in the same zone
+    is_intra_zone BOOLEAN NOT NULL,
     base_rate DECIMAL(10, 2) NOT NULL,
     per_kg_rate DECIMAL(10, 2) NOT NULL,
     cod_surcharge_percent DECIMAL(5, 2) DEFAULT 0.00,
@@ -51,7 +47,6 @@ CREATE TABLE rate_cards (
     CONSTRAINT unique_card_type UNIQUE (client_type, is_intra_zone)
 );
 
--- 4. Live Agent Coordinates (For Real-Time Distance Queries)
 CREATE TABLE agents (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
@@ -62,7 +57,6 @@ CREATE TABLE agents (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 5. Clean Orders Ledger
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     tracking_number VARCHAR(30) UNIQUE NOT NULL,
@@ -97,7 +91,6 @@ CREATE TABLE orders (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 6. The Immutable Tracking Ledger (Audit-Ready)
 CREATE TABLE order_status_logs (
     id SERIAL PRIMARY KEY,
     order_id INT REFERENCES orders(id) ON DELETE CASCADE,
@@ -108,7 +101,6 @@ CREATE TABLE order_status_logs (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Database Trigger for Automatic Immutable Ledger Logging
 CREATE OR REPLACE FUNCTION log_order_status_change()
 RETURNS TRIGGER AS $$
 BEGIN

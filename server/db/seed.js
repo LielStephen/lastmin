@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import { execute, getOne, initDbSchema, query } from './index.js'
+import { execute, getOne, initDbSchema } from './index.js'
 
 export async function seedDatabase() {
   await initDbSchema()
@@ -10,93 +10,93 @@ export async function seedDatabase() {
     return
   }
 
-  console.log('[SEED] Seeding database with demo data...')
+  console.log('[SEED] Seeding database with Indian demo data...')
   const passwordHash = await bcrypt.hash('password123', 10)
 
   const adminRes = await execute(
     'INSERT INTO users (name, email, password_hash, role, phone) VALUES (?, ?, ?, ?, ?)',
-    ['System Administrator', 'admin@lastmin.com', passwordHash, 'admin', '+15550001111']
+    ['System Administrator', 'admin@lastmin.com', passwordHash, 'admin', '+919876543210']
   )
 
   const cust1Res = await execute(
     'INSERT INTO users (name, email, password_hash, role, phone) VALUES (?, ?, ?, ?, ?)',
-    ['Alice Johnson (B2C)', 'customer@lastmin.com', passwordHash, 'customer', '+15552223333']
+    ['Rajesh Kumar (B2C)', 'customer@lastmin.com', passwordHash, 'customer', '+919811223344']
   )
 
   const cust2Res = await execute(
     'INSERT INTO users (name, email, password_hash, role, phone) VALUES (?, ?, ?, ?, ?)',
-    ['Acme Corp (B2B)', 'b2b@company.com', passwordHash, 'customer', '+15554445555']
+    ['TechCorp India (B2B)', 'b2b@company.com', passwordHash, 'customer', '+919855667788']
   )
 
   const agent1User = await execute(
     'INSERT INTO users (name, email, password_hash, role, phone) VALUES (?, ?, ?, ?, ?)',
-    ['David Courier (Agent 1)', 'agent1@lastmin.com', passwordHash, 'agent', '+15556667777']
+    ['Vikram Singh (Agent 1)', 'agent1@lastmin.com', passwordHash, 'agent', '+919899001122']
   )
 
   const agent2User = await execute(
     'INSERT INTO users (name, email, password_hash, role, phone) VALUES (?, ?, ?, ?, ?)',
-    ['Sarah Rider (Agent 2)', 'agent2@lastmin.com', passwordHash, 'agent', '+15558889999']
+    ['Ananya Rao (Agent 2)', 'agent2@lastmin.com', passwordHash, 'agent', '+919833445566']
   )
 
   const agent3User = await execute(
     'INSERT INTO users (name, email, password_hash, role, phone) VALUES (?, ?, ?, ?, ?)',
-    ['Michael Express (Agent 3)', 'agent3@lastmin.com', passwordHash, 'agent', '+15550009999']
+    ['Suresh Sharma (Agent 3)', 'agent3@lastmin.com', passwordHash, 'agent', '+919877889900']
   )
 
   const z1 = await execute(
     'INSERT INTO zones (name, code, description) VALUES (?, ?, ?)',
-    ['Downtown Central', 'DT', 'Metropolitan central business district']
+    ['Bengaluru Central', 'BLR', 'Central business and tech hub']
   )
   const z2 = await execute(
     'INSERT INTO zones (name, code, description) VALUES (?, ?, ?)',
-    ['North Suburbs', 'NS', 'Northern residential and commercial area']
+    ['Mumbai Suburbs', 'BOM', 'Western commercial area']
   )
   const z3 = await execute(
     'INSERT INTO zones (name, code, description) VALUES (?, ?, ?)',
-    ['West Industrial', 'WI', 'Western logistics and warehousing hub']
+    ['Delhi NCR', 'DEL', 'Capital logistics region']
   )
 
   await execute(
     'INSERT INTO zone_areas (zone_id, postal_code, area_name, city, state) VALUES (?, ?, ?, ?, ?)',
-    [z1.id, '10001', 'Manhattan Downtown', 'New York', 'NY']
+    [z1.id, '560001', 'MG Road', 'Bengaluru', 'Karnataka']
   )
   await execute(
     'INSERT INTO zone_areas (zone_id, postal_code, area_name, city, state) VALUES (?, ?, ?, ?, ?)',
-    [z2.id, '10024', 'Upper West Side', 'New York', 'NY']
+    [z2.id, '400050', 'Bandra West', 'Mumbai', 'Maharashtra']
   )
   await execute(
     'INSERT INTO zone_areas (zone_id, postal_code, area_name, city, state) VALUES (?, ?, ?, ?, ?)',
-    [z3.id, '07102', 'Newark Hub', 'Newark', 'NJ']
+    [z3.id, '110001', 'Connaught Place', 'New Delhi', 'Delhi']
   )
 
   await execute(
     'INSERT INTO rate_cards (client_type, is_intra_zone, base_rate, per_kg_rate, cod_surcharge_percent) VALUES (?, ?, ?, ?, ?)',
-    ['B2C', 1, 10.00, 2.50, 3.00]
+    ['B2C', 1, 50.00, 15.00, 2.50]
   )
   await execute(
     'INSERT INTO rate_cards (client_type, is_intra_zone, base_rate, per_kg_rate, cod_surcharge_percent) VALUES (?, ?, ?, ?, ?)',
-    ['B2C', 0, 18.00, 4.00, 3.00]
+    ['B2C', 0, 90.00, 25.00, 2.50]
   )
   await execute(
     'INSERT INTO rate_cards (client_type, is_intra_zone, base_rate, per_kg_rate, cod_surcharge_percent) VALUES (?, ?, ?, ?, ?)',
-    ['B2B', 1, 8.00, 1.80, 2.00]
+    ['B2B', 1, 40.00, 10.00, 1.50]
   )
   await execute(
     'INSERT INTO rate_cards (client_type, is_intra_zone, base_rate, per_kg_rate, cod_surcharge_percent) VALUES (?, ?, ?, ?, ?)',
-    ['B2B', 0, 15.00, 3.20, 2.00]
+    ['B2B', 0, 75.00, 20.00, 1.50]
   )
 
   const ag1 = await execute(
     'INSERT INTO agents (user_id, zone_id, current_lat, current_lng, status) VALUES (?, ?, ?, ?, ?)',
-    [agent1User.id, z1.id, 40.7128, -74.0060, 'available']
+    [agent1User.id, z1.id, 12.9716, 77.5946, 'available']
   )
   const ag2 = await execute(
     'INSERT INTO agents (user_id, zone_id, current_lat, current_lng, status) VALUES (?, ?, ?, ?, ?)',
-    [agent2User.id, z2.id, 40.8500, -73.9500, 'available']
+    [agent2User.id, z2.id, 19.0760, 72.8777, 'available']
   )
   const ag3 = await execute(
     'INSERT INTO agents (user_id, zone_id, current_lat, current_lng, status) VALUES (?, ?, ?, ?, ?)',
-    [agent3User.id, z3.id, 40.7300, -74.1500, 'busy']
+    [agent3User.id, z3.id, 28.6139, 77.2090, 'busy']
   )
 
   const ord1 = await execute(
@@ -108,10 +108,10 @@ export async function seedDatabase() {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', '-2 days'))`,
     [
       'TRK-982341', cust1Res.id, ag1.id, 'In Transit',
-      '123 Wall St, New York, NY', 40.7074, -74.0113,
-      '456 Broadway, New York, NY', 40.7191, -74.0002,
+      '100 MG Road, Bengaluru, KA', 12.9716, 77.5946,
+      '45 Indiranagar, Bengaluru, KA', 12.9784, 77.6408,
       z1.id, z1.id, 1, 'B2C',
-      3.5, 30, 20, 15, 1.8, 3.5, 10.00, 8.75, 0.56, 19.31, 'COD'
+      3.5, 30, 20, 15, 1.8, 3.5, 50.00, 52.50, 2.56, 105.06, 'COD'
     ]
   )
 
@@ -124,10 +124,10 @@ export async function seedDatabase() {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', '-1 days'))`,
     [
       'TRK-741290', cust1Res.id, ag2.id, 'Failed',
-      '789 Fifth Ave, New York, NY', 40.7645, -73.9731,
-      '101 125th St, New York, NY', 40.8080, -73.9450,
-      z1.id, z2.id, 0, 'B2C',
-      5.0, 50, 40, 30, 12.0, 12.0, 18.00, 48.00, 0.00, 66.00, 'PREPAID', 'Customer address unreachable (security gate locked)'
+      '12 Linking Road, Mumbai, MH', 19.0600, 72.8300,
+      '88 Powai Lake Rd, Mumbai, MH', 19.1170, 72.9050,
+      z2.id, z2.id, 1, 'B2C',
+      5.0, 50, 40, 30, 12.0, 12.0, 50.00, 180.00, 0.00, 230.00, 'PREPAID', 'Customer phone unreachable'
     ]
   )
 
@@ -137,15 +137,15 @@ export async function seedDatabase() {
   )
   await execute(
     'INSERT INTO order_status_logs (order_id, from_status, to_status, changed_by, notes, timestamp) VALUES (?, ?, ?, ?, ?, datetime(\'now\', \'-1 days\'))',
-    [ord1.id, 'Created', 'Assigned', adminRes.id, 'Assigned via Haversine auto-assignment algorithm']
+    [ord1.id, 'Created', 'Assigned', adminRes.id, 'Assigned to nearest courier']
   )
   await execute(
     'INSERT INTO order_status_logs (order_id, from_status, to_status, changed_by, notes, timestamp) VALUES (?, ?, ?, ?, ?, datetime(\'now\', \'-18 hours\'))',
-    [ord1.id, 'Assigned', 'Picked Up', agent1User.id, 'Package scanned and picked up']
+    [ord1.id, 'Assigned', 'Picked Up', agent1User.id, 'Package picked up']
   )
   await execute(
     'INSERT INTO order_status_logs (order_id, from_status, to_status, changed_by, notes, timestamp) VALUES (?, ?, ?, ?, ?, datetime(\'now\', \'-6 hours\'))',
-    [ord1.id, 'Picked Up', 'In Transit', agent1User.id, 'Package dispatched to transit center']
+    [ord1.id, 'Picked Up', 'In Transit', agent1User.id, 'Package in transit']
   )
 
   await execute(
@@ -158,7 +158,7 @@ export async function seedDatabase() {
   )
   await execute(
     'INSERT INTO order_status_logs (order_id, from_status, to_status, changed_by, notes, timestamp) VALUES (?, ?, ?, ?, ?, datetime(\'now\', \'-12 hours\'))',
-    [ord2.id, 'Assigned', 'Picked Up', agent2User.id, 'Picked up from merchant']
+    [ord2.id, 'Assigned', 'Picked Up', agent2User.id, 'Picked up from sender']
   )
   await execute(
     'INSERT INTO order_status_logs (order_id, from_status, to_status, changed_by, notes, timestamp) VALUES (?, ?, ?, ?, ?, datetime(\'now\', \'-8 hours\'))',
@@ -170,10 +170,10 @@ export async function seedDatabase() {
   )
   await execute(
     'INSERT INTO order_status_logs (order_id, from_status, to_status, changed_by, notes, timestamp) VALUES (?, ?, ?, ?, ?, datetime(\'now\', \'-1 hour\'))',
-    [ord2.id, 'Out for Delivery', 'Failed', agent2User.id, 'Customer address unreachable (security gate locked)']
+    [ord2.id, 'Out for Delivery', 'Failed', agent2User.id, 'Customer phone unreachable']
   )
 
-  console.log('[SEED] Database seed completed successfully.')
+  console.log('[SEED] Database seed completed with Indian delivery data.')
 }
 
 if (process.argv[1].endsWith('seed.js')) {

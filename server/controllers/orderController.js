@@ -12,9 +12,9 @@ async function getRateCard(clientType, isIntraZone) {
   if (card) return card
   
   return {
-    base_rate: clientType === 'B2B' ? (isIntraZone ? 8 : 15) : (isIntraZone ? 10 : 18),
-    per_kg_rate: clientType === 'B2B' ? (isIntraZone ? 1.8 : 3.2) : (isIntraZone ? 2.5 : 4.0),
-    cod_surcharge_percent: clientType === 'B2B' ? 2.0 : 3.0
+    base_rate: clientType === 'B2B' ? (isIntraZone ? 40 : 75) : (isIntraZone ? 50 : 90),
+    per_kg_rate: clientType === 'B2B' ? (isIntraZone ? 10 : 20) : (isIntraZone ? 15 : 25),
+    cod_surcharge_percent: clientType === 'B2B' ? 1.5 : 2.5
   }
 }
 
@@ -53,8 +53,8 @@ export async function calculateOrderRate(req, res) {
 export async function createOrder(req, res) {
   try {
     const {
-      pickupAddress, pickupLat = 40.7074, pickupLng = -74.0113,
-      dropAddress, dropLat = 40.7300, dropLng = -73.9900,
+      pickupAddress, pickupLat = 12.9716, pickupLng = 77.5946,
+      dropAddress, dropLat = 12.9784, dropLng = 77.6408,
       pickupZoneId = 1, dropZoneId = 1,
       length, width, height, actualWeight,
       clientType = 'B2C', paymentMethod = 'PREPAID',

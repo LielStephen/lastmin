@@ -1,231 +1,153 @@
-import React, { useState } from 'react'
-import { X, Calculator, ArrowRight, CheckCircle, Package } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { Calculator, X, Sparkles, CheckCircle2 } from 'lucide-react'
 
 export default function RateCalculatorModal({ isOpen, onClose }) {
-  const [form, setForm] = useState({
-    length: 40,
-    width: 30,
-    height: 25,
-    actualWeight: 5,
+  const [formData, setFormData] = useState({
+    length: 30,
+    width: 20,
+    height: 15,
+    actualWeight: 3.5,
     clientType: 'B2C',
+    paymentMethod: 'COD',
     pickupZoneId: 1,
-    dropZoneId: 1,
-    paymentMethod: 'COD'
+    dropZoneId: 1
   })
 
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (!isOpen) return
+    setLoading(true)
+    fetch('/api/orders/calculate-rate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('antigravity_token')}`
+      },
+      body: JSON.stringify(formData)
+    })
+      .then(res => res.json())
+      .then(data => setResult(data))
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [formData, isOpen])
 
   if (!isOpen) return null
 
-  const handleCalculate = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-    try {
-      const res = await fetch('/api/orders/calculate-rate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('antigravity_token')}`
-        },
-        body: JSON.stringify(form)
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Calculation failed')
-      setResult(data)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl space-y-4 p-6">
         
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/50">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
           <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-lg bg-indigo-500/20 text-indigo-400">
+            <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400">
               <Calculator className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-heading font-bold text-lg text-slate-100">Rate Engine Strategy Pattern</h3>
-              <p className="text-xs text-slate-400">Live Volumetric Weight & Surcharge Engine</p>
+              <h3 className="font-heading font-bold text-lg text-slate-100">Shipping Rate Calculator (INR)</h3>
+              <p className="text-xs text-slate-400">Calculate billable weight & COD charges in Rupees (₹)</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-200 transition">
+          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-slate-200">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-6">
-          <form onSubmit={handleCalculate} className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1">Length (cm)</label>
-              <input
-                type="number"
-                value={form.length}
-                onChange={e => setForm({ ...form, length: e.target.value })}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1">Width (cm)</label>
-              <input
-                type="number"
-                value={form.width}
-                onChange={e => setForm({ ...form, width: e.target.value })}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1">Height (cm)</label>
-              <input
-                type="number"
-                value={form.height}
-                onChange={e => setForm({ ...form, height: e.target.value })}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1">Actual Weight (kg)</label>
-              <input
-                type="number"
-                step="0.1"
-                value={form.actualWeight}
-                onChange={e => setForm({ ...form, actualWeight: e.target.value })}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1">Client Classification</label>
-              <select
-                value={form.clientType}
-                onChange={e => setForm({ ...form, clientType: e.target.value })}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"
-              >
-                <option value="B2C">B2C Retail Customer</option>
-                <option value="B2B">B2B Corporate Enterprise</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1">Payment Method</label>
-              <select
-                value={form.paymentMethod}
-                onChange={e => setForm({ ...form, paymentMethod: e.target.value })}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"
-              >
-                <option value="PREPAID">PREPAID (Card/UPI)</option>
-                <option value="COD">COD (Cash on Delivery)</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1">Pickup Zone</label>
-              <select
-                value={form.pickupZoneId}
-                onChange={e => setForm({ ...form, pickupZoneId: e.target.value })}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"
-              >
-                <option value={1}>Downtown Central (Zone 1)</option>
-                <option value={2}>North Suburbs (Zone 2)</option>
-                <option value={3}>West Industrial (Zone 3)</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1">Drop Zone</label>
-              <select
-                value={form.dropZoneId}
-                onChange={e => setForm({ ...form, dropZoneId: e.target.value })}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200"
-              >
-                <option value={1}>Downtown Central (Zone 1)</option>
-                <option value={2}>North Suburbs (Zone 2)</option>
-                <option value={3}>West Industrial (Zone 3)</option>
-              </select>
-            </div>
-
-            <div className="col-span-2 mt-2">
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-2.5 rounded-lg flex items-center justify-center space-x-2 transition shadow-lg shadow-indigo-600/20"
-              >
-                {loading ? (
-                  <span>Calculating...</span>
-                ) : (
-                  <>
-                    <span>Execute Strategy Pattern</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
-
-          {error && <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs">{error}</div>}
-
-          {/* Results Breakdown */}
-          {result && (
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Calculation Breakdown</span>
-                <span className="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">
-                  {result.isIntraZone ? 'Intra-Zone Rate' : 'Inter-Zone Rate'}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                  <div className="text-slate-400">Volumetric Wt</div>
-                  <div className="font-bold text-slate-200 mt-1">{result.calculation.volumetricWeight} kg</div>
-                </div>
-                <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                  <div className="text-slate-400">Actual Wt</div>
-                  <div className="font-bold text-slate-200 mt-1">{form.actualWeight} kg</div>
-                </div>
-                <div className="p-2 rounded bg-indigo-950/50 border border-indigo-800/40">
-                  <div className="text-indigo-300 font-medium">Billable Wt</div>
-                  <div className="font-extrabold text-indigo-200 mt-1">{result.calculation.billableWeight} kg</div>
-                </div>
-              </div>
-
-              <div className="space-y-1 text-xs text-slate-300 pt-2 border-t border-slate-900">
-                <div className="flex justify-between">
-                  <span>Base Zone Charge:</span>
-                  <span className="font-mono">${result.calculation.basePrice}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Weight Charge (${result.rateCard.per_kg_rate}/kg):</span>
-                  <span className="font-mono">${result.calculation.weightCharge}</span>
-                </div>
-                {result.calculation.codSurcharge > 0 && (
-                  <div className="flex justify-between text-amber-400">
-                    <span>COD Surcharge ({result.rateCard.cod_surcharge_percent}%):</span>
-                    <span className="font-mono">+${result.calculation.codSurcharge}</span>
-                  </div>
-                )}
-                <div className="flex justify-between text-sm font-extrabold text-emerald-400 pt-2 border-t border-slate-800">
-                  <span>Final Calculated Charge:</span>
-                  <span className="font-mono text-base">${result.calculation.finalPrice}</span>
-                </div>
-              </div>
-            </div>
-          )}
-
+        <div className="grid grid-cols-2 gap-4 text-xs">
+          <div>
+            <label className="block text-slate-400 mb-1 font-medium">Length (cm)</label>
+            <input
+              type="number"
+              value={formData.length}
+              onChange={e => setFormData({ ...formData, length: Number(e.target.value) })}
+              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200"
+            />
+          </div>
+          <div>
+            <label className="block text-slate-400 mb-1 font-medium">Width (cm)</label>
+            <input
+              type="number"
+              value={formData.width}
+              onChange={e => setFormData({ ...formData, width: Number(e.target.value) })}
+              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200"
+            />
+          </div>
+          <div>
+            <label className="block text-slate-400 mb-1 font-medium">Height (cm)</label>
+            <input
+              type="number"
+              value={formData.height}
+              onChange={e => setFormData({ ...formData, height: Number(e.target.value) })}
+              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200"
+            />
+          </div>
+          <div>
+            <label className="block text-slate-400 mb-1 font-medium">Actual Weight (kg)</label>
+            <input
+              type="number"
+              step="0.1"
+              value={formData.actualWeight}
+              onChange={e => setFormData({ ...formData, actualWeight: Number(e.target.value) })}
+              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200"
+            />
+          </div>
         </div>
+
+        <div className="grid grid-cols-2 gap-4 text-xs">
+          <div>
+            <label className="block text-slate-400 mb-1 font-medium">Client Type</label>
+            <select
+              value={formData.clientType}
+              onChange={e => setFormData({ ...formData, clientType: e.target.value })}
+              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200"
+            >
+              <option value="B2C">B2C Retail</option>
+              <option value="B2B">B2B Corporate</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-slate-400 mb-1 font-medium">Payment Method</label>
+            <select
+              value={formData.paymentMethod}
+              onChange={e => setFormData({ ...formData, paymentMethod: e.target.value })}
+              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200"
+            >
+              <option value="COD">Cash on Delivery (COD)</option>
+              <option value="PREPAID">Prepaid</option>
+            </select>
+          </div>
+        </div>
+
+        {result && result.calculation && (
+          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+            <div className="flex items-center justify-between text-xs border-b border-slate-800 pb-2">
+              <span className="text-slate-400">Volumetric Weight Formula:</span>
+              <span className="font-mono text-indigo-300">({formData.length} × {formData.width} × {formData.height}) / 5000 = {result.calculation.volumetricWeight} kg</span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 text-center text-xs">
+              <div className="p-2 rounded bg-slate-900 border border-slate-800">
+                <span className="text-slate-500 block text-[10px]">Base Rate</span>
+                <span className="font-mono text-slate-200">₹{result.calculation.basePrice}</span>
+              </div>
+              <div className="p-2 rounded bg-slate-900 border border-slate-800">
+                <span className="text-slate-500 block text-[10px]">Weight Charge</span>
+                <span className="font-mono text-slate-200">₹{result.calculation.weightCharge}</span>
+              </div>
+              <div className="p-2 rounded bg-slate-900 border border-slate-800">
+                <span className="text-slate-500 block text-[10px]">COD Surcharge</span>
+                <span className="font-mono text-amber-300">₹{result.calculation.codSurcharge}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-slate-300 font-semibold text-xs">Total Billable Amount:</span>
+              <span className="font-mono font-extrabold text-2xl text-emerald-400">₹{result.calculation.finalPrice}</span>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   )
