@@ -3,6 +3,7 @@ import { Plus, Package, MapPin, AlertTriangle, RefreshCw } from 'lucide-react'
 import OrderTimeline from '../components/OrderTimeline'
 import RescheduleModal from '../components/RescheduleModal'
 import InteractiveMap from '../components/InteractiveMap'
+import KiboComparison from '../components/KiboComparison'
 
 export default function CustomerDashboard() {
   const [orders, setOrders] = useState([])
@@ -142,6 +143,15 @@ export default function CustomerDashboard() {
           <span>Place New Order</span>
         </button>
       </div>
+
+      <KiboComparison
+        onSelectOption={(opt) => {
+          setNewOrder(prev => ({
+            ...prev,
+            clientType: opt.id === 'express' ? 'B2C' : 'B2B'
+          }))
+        }}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
